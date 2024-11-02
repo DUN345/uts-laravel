@@ -1,6 +1,6 @@
 @extends('dashboard')
-@section('content')
 
+@section('content')
 
 <div class="container mt-5">
     <div class="row">
@@ -27,7 +27,8 @@
                                 </td>
                                 <td>{{ $post->nim }}</td>
                                 <td>{{ $post->nama_mahasiswa }}</td>
-                                <td class="text-center">
+                                <td align="text-center">
+                                    <!-- <a id="edit" data-toggel="mo" href=""></a> -->
                                     <form onsubmit="return confirm('Apakah Anda Yakin ?');"
                                         action="{{ route('posts.destroy', $post->id) }}" method="POST">
                                         <a href="{{ route('posts.edit', $post->id) }}"
@@ -35,6 +36,7 @@
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-sm btn-danger">HAPUS</button>
+                                        <!-- <a href=""><button  class="btn btn-default btn-xs"><i class="fa fa-print"></i>Cetak</button></a> -->
                                     </form>
                                 </td>
                             </tr>
@@ -46,12 +48,15 @@
                     </table>
                     {{ $posts->links() }}
                 </div>
+                <!-- Footer Start -->
+                @include('components.footer')
+                <!-- Footer End -->
             </div>
         </div>
     </div>
 </div>
+@endsection
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script src="/ / cdnjs.cloudflare.com / ajax / libs / toastr.js / latest / toastr.min.js ">
 </script>
-@endsection

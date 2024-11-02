@@ -4,14 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+use illuminate\Support\Facades\Storage;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class PostController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
     public function index()
     {
         //get posts
@@ -19,7 +16,6 @@ class PostController extends Controller
         //render view with posts
         return view('posts.index', compact('posts'));
     }
-
     public function create()
     {
         return view('posts.create');
@@ -42,10 +38,11 @@ class PostController extends Controller
             'nama_mahasiswa' => $request->nama_mahasiswa
         ]);
         //redirect to index
-        return redirect()->route('posts.index')->with(['success' => 'Data Berhasil
-        Disimpan!']);
+        return redirect()->route('posts.index')->with([
+            'success' => 'Data Berhasil
+Disimpan!'
+        ]);
     }
-
     public function edit(Post $post)
     {
         return view('posts.edit', compact('post'));
@@ -54,13 +51,10 @@ class PostController extends Controller
     {
         //validate form
         $request->validate([
-            'foto_mahasiswa' => [
-                'image',
-                'mimes:jpeg,png,jpg,gif,svg',
-                'max:2048',
-            ],
+            'foto_mahasiswa' =>
+            'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'nim' => 'required|min:5',
-            'nama_mahasiswa' => 'required|min:5',
+            'nama_mahasiswa' => 'required|min:5'
         ]);
         //check if image is uploaded
         if ($request->hasFile('foto_mahasiswa')) {
@@ -68,7 +62,7 @@ class PostController extends Controller
             $image = $request->file('foto_mahasiswa');
             $image->storeAs('public/posts', $image->hashName());
             //delete old image
-            Storage::delete('public/posts/' . $post->image);
+            Storage::delete('public/posts/' . $post->foto_mahasiswa);
             //update post with new image
             $post->update([
                 'foto_mahasiswa' => $image->hashName(),
@@ -83,17 +77,39 @@ class PostController extends Controller
             ]);
         }
         //redirect to index
-        return redirect()->route('posts.index')->with(['success' => 'Data
-        Berhasil Diubah!']);
+        return redirect()->route('posts.index')->with([
+            'success' => 'Data
+Berhasil Diubah!'
+        ]);
+    }
+
+    public function show($id)
+    {
+        $post = Post::findOrFail($id);
+        return view('posts.show', compact('post'));
     }
 
     public function destroy(Post $post)
     {
-        //delete image
-        Storage::delete('public/posts/' . $post->image);
-        //delete post
+        // Hapus gambar, pastikan Anda memeriksa apakah gambar ada sebelum menghapusnya
+        if ($post->image && Storage::exists('public/posts/' . $post->image)) {
+            Storage::delete('public/posts/' . $post->image);
+        }
+
+        // Hapus post
         $post->delete();
-        //redirect to index
-        return redirect()->route('posts.index')->with(['success' => 'Data Berhasil Dihapus!']);
+
+        // Redirect ke halaman index dengan pesan sukses
+        return redirect()->route('posts.index')->with([
+            'success' => 'Data Berhasil Dihapus!'
+        ]);
     }
+
+    // function view_pdf()
+    // {
+    //     $mpdf = new \Mpdf\Mpdf();
+    //     $posts = Post::all();
+    //     $mpdf->WriteHTML('<h1>Hello world!</h1>');
+    //     $mpdf->Output();
+    // }
 }
