@@ -16,7 +16,8 @@
                  <span class="d-none d-lg-inline-flex">{{ Auth::user()->name }}</span>
              </a>
              <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
-                 <a href="#" class="dropdown-item">My Profile</a>
+                 <a href="profile.edit" class="dropdown-item">{{ __('Profil') }}</a>
+
                  <a href="../auth/change-password.blade.php" class="dropdown-item">Ganti Password</a>
                  <form method="POST" action="{{ route('logout') }}" class="m-0">
                      @csrf
@@ -29,5 +30,21 @@
              </div>
          </div>
      </div>
+     <x-slot name="content">
+         <x-dropdown-link :href="route('profile.edit')">
+             {{ __('Profilasdasde') }}
+         </x-dropdown-link>
+    
+         <!-- Authentication -->
+         <form method="POST" action="{{ route('logout') }}">
+             @csrf
+    
+             <x-dropdown-link :href="route('logout')"
+                 onclick="event.preventDefault();
+                                                    this.closest('form').submit();">
+                 {{ __('LogOut') }}
+             </x-dropdown-link>
+         </form>
+     </x-slot>
  </nav>
  <!-- Navbar End -->
