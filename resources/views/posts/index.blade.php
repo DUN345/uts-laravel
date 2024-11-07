@@ -35,6 +35,7 @@
                                             class="btn btn-sm btn-primary">EDIT</a>
                                         @csrf
                                         @method('DELETE')
+                                        <a href="{{ route('posts.download') }}" class="btn btn-sm btn-primary">PDF</a>
                                         <button type="submit" class="btn btn-sm btn-danger">HAPUS</button>
                                         <!-- <a href=""><button  class="btn btn-default btn-xs"><i class="fa fa-print"></i>Cetak</button></a> -->
                                     </form>

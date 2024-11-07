@@ -21,31 +21,27 @@ class ProfileController extends Controller
         ]);
     }
 
-   
     /**
-     * Delete the user's account.
+     * Update the user's profile information.
      */
-    public function destroy(Request $request): RedirectResponse
+    public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->validateWithBag('userDeletion', [
-            'password' => ['required', 'current_password'],
-        ]);
+        $request->user()->fill($request->validated());
 
-        $user = $request->user();
+        if ($request->user()->isDirty('email')) {
+            $request->user()->email_verified_at = null;
+        }
 
-        Auth::logout();
+        $request->user()->save();
 
-        $user->delete();
-
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return Redirect::to('/');
+        return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
+
+    
 
 
     public function show()
     {
-        return view('profile'); // pastikan ada view 'profile.blade.php'
+        return view('coba'); // pastikan ada view 'profile.blade.php'
     }
 }

@@ -105,6 +105,14 @@ Berhasil Diubah!'
         ]);
     }
 
+
+    public function downloadPDF()
+    {
+        $posts = Post::all(); // Fetch all posts (students)
+        $pdf = PDF::loadView('posts.download', compact('posts')); // Create PDF from the view
+        return $pdf->download('mahasiswa.pdf'); // Download the generated PDF
+    }
+
     // function view_pdf()
     // {
     //     $mpdf = new \Mpdf\Mpdf();
